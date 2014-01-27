@@ -136,4 +136,4 @@ const std::string& OSTBaseExc::StackTrace() const
 	return m_stackTrace;
 }
 
-OST_NAMESPACE_EDN
+OST_NAMESPACE_END

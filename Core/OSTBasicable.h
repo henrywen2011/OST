@@ -37,6 +37,8 @@
 
 #include "OSTTypes.h"
 
+OST_NAMESPACE_BEGIN
+
 /** 
 * @class Runnable
 * @brief Encapsulates a Runnable task
@@ -151,9 +153,11 @@ public:
      * @return 
      *   - <em>OST_TRUE</em> if the set of tasks being wait for complete before 
      *                   <i>timeout</i> milliseconds elapse.
-     *   - <em>OST_FALSE</em> othewise.
+     *   - <em>OST_FALSE</em> otherwise.
      */
     virtual OSTBool wait(unsigned long timeout) = 0;
 };
+
+OST_NAMESPACE_END
 
 #endif//OST_CORE_OSTBASICABLE_H

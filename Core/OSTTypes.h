@@ -49,7 +49,6 @@
 //---------------------------------------------------------------------------
 // Basic Types
 //---------------------------------------------------------------------------
-#ifdef WIN32
 /** Boolean TRUE/FALSE type. */ 
 typedef	int					OSTBool;
 /** Signed character for strings. */ 
@@ -70,55 +69,33 @@ typedef	unsigned short		OSTUInt16;
 typedef	int					OSTInt32;
 /** 32-bit unsigned integer. */ 
 typedef	unsigned int		OSTUInt32;
+/** natural signed integer. */ 
+typedef	int					OSTInt;
+/** natural unsigned integer. */ 
+typedef	unsigned int		OSTUInt;
+/** natural signed integer. */ 
+typedef	long				OSTLong;
+/** natural unsigned integer. */ 
+typedef	unsigned long		OSTULong;
+/** Float (32bit) */ 
+typedef	float				OSTFloat;
+/** Double (64bit) */ 
+typedef	double				OSTDouble;
+/** Size type. */ 
+typedef size_t				OSTSize_t;
+
+
+#ifdef WIN32
 /** 64-bit signed integer. */ 
 typedef	__int64				OSTInt64;
 /** 64-bit unsigned integer. */ 
 typedef	unsigned __int64	OSTUInt64;
-/** natural signed integer. */ 
-typedef	int					OSTInt;
-/** natural unsigned integer. */ 
-typedef	unsigned int		OSTUInt;
-/** Float (32bit) */ 
-typedef	float				OSTFloat;
-/** Double (64bit) */ 
-typedef	double				OSTDouble;
-/** Size type. */ 
-typedef size_t				OSTSize_t;
 #else
-/** Boolean TRUE/FALSE type. */ 
-typedef	int					OSTBool;
-/** Signed character for strings. */ 
-typedef	char				OSTChar;
-/** Unsigned character for strings. */ 
-typedef	unsigned char		OSTUChar;
-/** Signed wide character for strings. */ 
-typedef	wchar_t				OSTWChar;
-/** 8-bit signed integer. */ 
-typedef	signed char			OSTInt8;
-/** 8-bit unsigned integer. */ 
-typedef	unsigned char		OSTUInt8;
-/** 16-bit signed integer. */ 
-typedef	short				OSTInt16;
-/** 16-bit unsigned integer. */ 
-typedef	unsigned short		OSTUInt16;
-/** 32-bit signed integer. */ 
-typedef	int					OSTInt32;
-/** 32-bit unsigned integer. */ 
-typedef	unsigned int		OSTUInt32;
 /** 64-bit signed integer. */ 
 typedef	long long			OSTInt64;
 /** 64-bit unsigned integer. */ 
 typedef	unsigned long long	OSTUInt64;
-/** natural signed integer. */ 
-typedef	int					OSTInt;
-/** natural unsigned integer. */ 
-typedef	unsigned int		OSTUInt;
-/** Float (32bit) */ 
-typedef	float				OSTFloat;
-/** Double (64bit) */ 
-typedef	double				OSTDouble;
-/** Size type. */ 
-typedef size_t				OSTSize_t;
-#endif//
+#endif
+
 
 #endif//OST_CORE_OSTTYPES_H

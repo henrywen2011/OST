@@ -99,7 +99,7 @@ public:														\
 	name (const char* text)        throw(): base (text) {}  \
 	name (const std::string &text) throw(): base (text) {}  \
 	name (std::stringstream &text) throw(): base (text) {}  \
-	~name() throw() { }                                     \
+	virtual ~name() throw() { }								\
 };
 
 //--------------------------------------------------------
@@ -107,10 +107,7 @@ public:														\
 //--------------------------------------------------------
 OST_DEFINE_EXC (ArgExc, OSTBaseExc)    // Invalid arguments to a function call
 
-OST_DEFINE_EXC (LogicExc, OSTBaseExc)  // General error in a program's logic,
-// for example, a function was called
-// in a context where the call does
-// not make sense.
+OST_DEFINE_EXC (LogicExc, OSTBaseExc)  // General error in a program's logic
 
 //---------------------------------------------------------------------------
 // Invalid input data, e.g. from a file
@@ -150,6 +147,19 @@ OST_DEFINE_EXC (NullExc, OSTBaseExc)
 //---------------------------------------------------------------------------
 OST_DEFINE_EXC (TypeExc, OSTBaseExc)
 
+//---------------------------------------------------------------------------
+// RuntimeExc
+//---------------------------------------------------------------------------
+OST_DEFINE_EXC (RuntimeExc,		OSTBaseExc)
+OST_DEFINE_EXC (DataExc,		RuntimeExc)
+OST_DEFINE_EXC (SystemExc,		RuntimeExc)
+OST_DEFINE_EXC (ExistsExc,		RuntimeExc)
+OST_DEFINE_EXC (TimeoutExc,		RuntimeExc)
+OST_DEFINE_EXC (NotFoundExc,	RuntimeExc)
+OST_DEFINE_EXC (LibraryLoadExc,	RuntimeExc)
+OST_DEFINE_EXC (OutOfMemoryExc,	RuntimeExc)
+OST_DEFINE_EXC (NoPermissionExc,RuntimeExc)
+
 //----------------------------------------------------------------------
 // Stack-tracing support:
 // 
@@ -180,6 +190,6 @@ typedef std::string (* StackTracer) ();
 void SetStackTracer (StackTracer st);
 StackTracer GetStackTracer ();
 
-OST_NAMESPACE_EDN
+OST_NAMESPACE_END
 
 #endif//OST_CORE_OSTBBASEEXC_H

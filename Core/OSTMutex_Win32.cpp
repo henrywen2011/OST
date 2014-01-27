@@ -32,7 +32,10 @@
 *----------------------------------------------------------------------------*
 *                                                                            *
 *****************************************************************************/
+#include "OSTBaseExc.h"
 #include "OSTMutex.h"
+
+OST_NAMESPACE_BEGIN
 
 OSTMutex::OSTMutex(void)
 {
@@ -43,3 +46,39 @@ OSTMutex::~OSTMutex(void)
 {
 	DeleteCriticalSection(&m_mutex);
 }
+
+void OSTMutex::Lock() const
+{
+	try
+	{
+		EnterCriticalSection(&m_mutex);
+	}
+	catch (...)
+	{
+		throw SystemExc("Cannot lock mutex");
+	}
+}
+
+void OSTMutex::Unlock() const
+{
+	LeaveCriticalSection(&m_mutex);
+}
+
+OSTBool OSTMutex::TryLock()
+{
+	try
+	{
+		return (TryEnterCriticalSection(&m_mutex) != 0 ? OST_TRUE : OST_FALSE);
+	}
+	catch(...)
+	{
+	}
+	throw SystemExc("Cannot lock mutex");
+}
+
+OSTBool OSTMutex::TryLock(long millisecondes)
+{
+	return OST_TRUE;
+}
+
+OST_NAMESPACE_END

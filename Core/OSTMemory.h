@@ -32,11 +32,55 @@
 *----------------------------------------------------------------------------*
 *                                                                            *
 *****************************************************************************/
-#ifndef OST_CORE_OSTCPMMON_H
-#define OST_CORE_OSTCPMMON_H
+#ifndef OST_CORE_OSTMEMORY_H
+#define OST_CORE_OSTMEMORY_H
 
-#define OST_NAMESPACE_BEGIN			namespace ost {
-#define OST_NAMESPACE_END			}
-#define OST_NAMESPACE_USING			using namespace ost
+#include "OSTTypes.h"
 
-#endif//OST_CORE_OSTCPMMON_H
+OST_NAMESPACE_BEGIN
+/** 
+* @class 
+* @brief 
+*/
+class OSTMemory
+{
+public:
+	static void*  OSTMalloc(const OSTSize_t nAllocSize);
+
+	static void*  OSTMallocAligned(const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+
+	static void*  OSTCalloc(const OSTSize_t nAllocNum, const OSTSize_t nAllocSize);
+
+	static void*  OSTCallocAligned(const OSTSize_t nAllocNum, const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+
+	static void*  OSTRealloc(void* pMemory, const OSTSize_t nAllocSize);
+
+	static void*  OSTReallocAligned(void* pMemory, const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+
+	static void*  OSTRecalloc(void* pMemory, const OSTSize_t nAllocNum, const OSTSize_t nAllocSize);
+
+	static void  OSTFree(const void* pMemBlock);
+
+	static void  OSTFreeAligned(const void* pMemBlock);
+
+	static void  OSTMemCopy(void* pDest, const void* pSource, OSTSize_t nCount);
+
+	static OSTInt32  OSTMemCmp(const void *pBuf1, const void *pBuf2, OSTSize_t nCount);
+
+	static void  OSTMemSet(void* pDest, OSTUInt8 nValue, OSTSize_t nCount);
+
+	static void  OSTMemMove(void* pDest, const void* pSource, OSTSize_t nCount);
+
+	static OSTUInt64  OSTEndianSwapUINT64(OSTUInt64 nValue);
+
+	static OSTUInt32  OSTEndianSwapUINT32(OSTUInt32 nValue);
+
+	static OSTUInt16  OSTEndianSwapUINT16(OSTUInt16 nValue);
+
+	static OSTFloat  OSTEndianSwapFLOAT(OSTFloat fValue);
+};
+
+
+
+OST_NAMESPACE_END
+#endif//OST_CORE_OSTMEMORY_H

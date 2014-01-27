@@ -45,7 +45,7 @@ typedef CRITICAL_SECTION OST_MUTEX_SECTION;
 typedef pthread_mutex_t  OST_MUTEX_SECTION;
 #endif
 
-
+OST_NAMESPACE_BEGIN
 /** 
 * @class OSTMutex
 * @brief A Mutex (mutual exclusion) is a synchronization mechanism used to control
@@ -60,39 +60,70 @@ public:
 	/**
 	* @brief Locks the OSTMutex. Blocks if the OSTMutex is held by another thread.
 	*/
-	void Lock();
-
-	/**
-	* @brief Locks the mutex. Blocks up to the given number of milliseconds
-	* if the mutex is held by another thread. Throws a TimeoutException
-	* if the mutex can not be locked within the given timeout.
-	*
-	* Performance Note: On most platforms (including Windows), this member function is 
-	* implemented using a loop calling (the equivalent of) tryLock() and Thread::sleep().
-	* On POSIX platforms that support pthread_mutex_timedlock(), this is used.
-	*/
-	void Lock(long milliseconds);
+	void Lock() const;
 
 	/**
 	* @brief Unlocks the mutex so that it can be acquired by other threads.
 	*/
-	void Unlock();
+	void Unlock() const;
 
 	/**
-	* @brief Tries to lock the mutex. Returns false immediately
-	* if the mutex is already held by another thread.
+	* @brief Tries to lock the mutex. 
+	* @return 
+	*	-<em>OST_FALSE</em> if the mutex is already held by another thread
+	*	-<em>OST_TRUE</em> otherwise.
 	*/
 	OSTBool TryLock();
 
 	/**
 	* @brief Locks the mutex. Blocks up to the given number of milliseconds
 	* if the mutex is held by another thread.
-	* Returns true if the mutex was successfully locked.
+	* Performance Note: On most platforms (including Windows), this member function is 
+	* implemented using a loop calling (the equivalent of) tryLock() and Thread::sleep().
+	* On POSIX platforms that support pthread_mutex_timedlock(), this is used.
+	*
+	* @return
+	*	- <em>OST_TRUE</em> if the mutex was successfully locked.
+	*	- <em>OST_FALSE</em> otherwise.
 	*/
 	OSTBool TryLock(long millisecondes);
 	
 private:
-	OST_MUTEX_SECTION m_mutex;
+	mutable OST_MUTEX_SECTION m_mutex;
 };
+
+/** 
+* @class AutoLock
+* @brief Using the AutoLock class is the preferred way to automatically
+* lock and unlock a mutex.
+*/
+class AutoLock
+{
+public:
+	AutoLock(const OSTMutex& mutex, bool autolocked = true) : m_mutex(&mutex), m_locked(false)
+	{
+		if(autolocked)
+		{
+			m_mutex->Lock();
+			m_locked = autolocked;
+		}		
+	};
+
+	~AutoLock()
+	{
+		if(m_locked)
+		{
+			m_mutex->Unlock();
+		}
+	};
+
+private:
+	const OSTMutex* m_mutex;
+	bool			m_locked;
+};
+
+#define LOCK(mutex) AutoLock locker(mutex)
+
+OST_NAMESPACE_END
 
 #endif//OST_CORE_OSTMUTEX_H
