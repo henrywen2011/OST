@@ -35,10 +35,11 @@
 #ifndef OST_CORE_OSTMUTEX_H
 #define OST_CORE_OSTMUTEX_H
 
+#include "OSTTypes.h"
 #include "OSTPlatform.h"
 #include "OSTBasicable.h"
 
-#ifdef WIN32
+#if (OST_PLAFORM == OST_PLATFORM_WIN32)
 typedef CRITICAL_SECTION OST_MUTEX_SECTION;
 #else
 #include <pthread>
@@ -100,11 +101,11 @@ private:
 class AutoLock
 {
 public:
-	AutoLock(const OSTMutex& mutex, bool autolocked = true) : m_mutex(&mutex), m_locked(false)
+	AutoLock(const OSTMutex& mutex, OSTBool autolocked = OST_TRUE) : m_mutex(mutex), m_locked(autolocked)
 	{
 		if(autolocked)
 		{
-			m_mutex->Lock();
+			m_mutex.Lock();
 			m_locked = autolocked;
 		}		
 	};
@@ -113,16 +114,51 @@ public:
 	{
 		if(m_locked)
 		{
-			m_mutex->Unlock();
+			m_mutex.Unlock();
 		}
 	};
 
 private:
-	const OSTMutex* m_mutex;
-	bool			m_locked;
+	AutoLock(const AutoLock&);
+	AutoLock& operator = (const AutoLock&);
+
+private:
+	const OSTMutex& m_mutex;
+	OSTBool			m_locked;
 };
 
-#define LOCK(mutex) AutoLock locker(mutex)
+/** 
+* @class AutoUnLock
+* @brief Using the AutoUnLock class is the preferred way to automatically
+* lock and unlock a mutex.
+*/
+class AutoUnLock
+{
+public:
+	AutoUnLock(const OSTMutex& mutex, OSTBool unlocked = OST_TRUE) : m_mutex(mutex), m_unlocked(unlocked)
+	{
+		if(m_unlocked)
+		{
+			m_mutex.Unlock();
+		}
+	}
+	
+	~AutoUnLock()
+	{
+		m_mutex.Lock();
+	}
+
+private:
+	AutoUnLock(const AutoUnLock&);
+	AutoUnLock& operator = (const AutoUnLock&);
+
+private:
+	const OSTMutex&		m_mutex;
+	OSTBool				m_unlocked;
+};
+
+#define LOCK(mutex)		AutoLock	locker(mutex)
+#define UNLOCK(mutex)	AutoUnLock	locker(mutex)
 
 OST_NAMESPACE_END
 

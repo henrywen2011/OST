@@ -32,47 +32,43 @@
 *----------------------------------------------------------------------------*
 *                                                                            *
 *****************************************************************************/
-#ifndef OST_CORE_OSTMEMORY_H
-#define OST_CORE_OSTMEMORY_H
-
-#include "OSTTypes.h"
+#include "OSTRWMutex.h"
 
 OST_NAMESPACE_BEGIN
-/** 
-* @class 
-* @brief 
-*/
-class OSTMemory
+
+OSTRWLock::OSTRWLock()
 {
-public:
-	static void*  OSTMalloc(const OSTSize_t nAllocSize);
 
-	static void*  OSTMallocAligned(const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+}
 
-	static void*  OSTCalloc(const OSTSize_t nAllocNum, const OSTSize_t nAllocSize);
+OSTRWLock::~OSTRWLock()
+{
 
-	static void*  OSTCallocAligned(const OSTSize_t nAllocNum, const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+}
 
-	static void*  OSTRealloc(void* pMemory, const OSTSize_t nAllocSize);
+void OSTRWLock::ReadLock()
+{
 
-	static void*  OSTReallocAligned(void* pMemory, const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+}
 
-	static void*  OSTRecalloc(void* pMemory, const OSTSize_t nAllocNum, const OSTSize_t nAllocSize);
+OSTBool OSTRWLock::TryReadLock()
+{
 
-	static void  OSTFree(const void* pMemBlock);
+}
 
-	static void  OSTFreeAligned(const void* pMemBlock);
+void OSTRWLock::WriteLock()
+{
 
-	static void  OSTMemCopy(void* pDest, const void* pSource, OSTSize_t nCount);
+}
 
-	static OSTInt32  OSTMemCmp(const void *pBuf1, const void *pBuf2, OSTSize_t nCount);
+OSTBool OSTRWLock::TryWriteLock()
+{
 
-	static void  OSTMemSet(void* pDest, OSTUInt8 nValue, OSTSize_t nCount);
+}
 
-	static void  OSTMemMove(void* pDest, const void* pSource, OSTSize_t nCount);
-};
+void OSTRWLock::Unlock()
+{
 
-
+}
 
 OST_NAMESPACE_END
-#endif//OST_CORE_OSTMEMORY_H

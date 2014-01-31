@@ -126,4 +126,5 @@
 /** Indicates a deprecated function */
 #define OST_API_DEPRECATED(msg)		__attribute__((warning("This function is deprecated: " msg)))
 
+#define OST_PLATFORM_LINUX_NO_POSIX_MEMALIGN
 #endif//OST_CORE_OSTPLATFORMLINUX_ARM_H

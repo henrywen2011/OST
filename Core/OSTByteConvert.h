@@ -32,47 +32,33 @@
 *----------------------------------------------------------------------------*
 *                                                                            *
 *****************************************************************************/
-#ifndef OST_CORE_OSTMEMORY_H
-#define OST_CORE_OSTMEMORY_H
+#ifndef OST_CORE_OSTBYTECONVERT_H
+#define OST_CORE_OSTBYTECONVERT_H
 
 #include "OSTTypes.h"
+#include "OSTCommon.h"
 
 OST_NAMESPACE_BEGIN
+
 /** 
-* @class 
-* @brief 
+* @class OSTByteConvert
+* @brief Byte Convert 
 */
-class OSTMemory
+class OSTByteConvert
 {
 public:
-	static void*  OSTMalloc(const OSTSize_t nAllocSize);
+	static OSTInt16 FlipBytes(OSTInt16 bytes);
 
-	static void*  OSTMallocAligned(const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+	static OSTUInt16 FlipBytes(OSTUInt16 bytes);
 
-	static void*  OSTCalloc(const OSTSize_t nAllocNum, const OSTSize_t nAllocSize);
+	static OSTInt32 FlipBytes(OSTInt32 bytes);
 
-	static void*  OSTCallocAligned(const OSTSize_t nAllocNum, const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+	static OSTUInt32 FlipBytes(OSTUInt32 bytes);
 
-	static void*  OSTRealloc(void* pMemory, const OSTSize_t nAllocSize);
+	static OSTInt64 FlipBytes(OSTInt64 bytes);
 
-	static void*  OSTReallocAligned(void* pMemory, const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
-
-	static void*  OSTRecalloc(void* pMemory, const OSTSize_t nAllocNum, const OSTSize_t nAllocSize);
-
-	static void  OSTFree(const void* pMemBlock);
-
-	static void  OSTFreeAligned(const void* pMemBlock);
-
-	static void  OSTMemCopy(void* pDest, const void* pSource, OSTSize_t nCount);
-
-	static OSTInt32  OSTMemCmp(const void *pBuf1, const void *pBuf2, OSTSize_t nCount);
-
-	static void  OSTMemSet(void* pDest, OSTUInt8 nValue, OSTSize_t nCount);
-
-	static void  OSTMemMove(void* pDest, const void* pSource, OSTSize_t nCount);
+	static OSTUInt64 FlipBytes(OSTUInt64 bytes);
 };
 
-
-
 OST_NAMESPACE_END
-#endif//OST_CORE_OSTMEMORY_H
+#endif//OST_CORE_OSTBYTECONVERT_H

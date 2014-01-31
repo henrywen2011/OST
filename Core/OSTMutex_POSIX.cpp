@@ -40,9 +40,11 @@ OST_NAMESPACE_BEGIN
 OSTMutex::OSTMutex(void)
 {
 	pthread_mutexattr_t attr;
-	pthread_mutexattr_init(&attr);
+	
+	if( 0 != pthread_mutexattr_init(&attr) || 0 != pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE))
+		return;
 
-	if (pthread_mutex_init(&m_mutex, &attr))
+	if (0 != pthread_mutex_init(&m_mutex, &attr))
 	{
 		pthread_mutexattr_destroy(&attr);
 		throw SystemExc("cannot create mutex");
@@ -74,7 +76,7 @@ void OSTMutex::Unlock() const
 
 OSTBool OSTMutex::TryLock()
 {
-	int rc = pthread_mutex_trylock(&m_mutex);
+	OSTInt32 rc = pthread_mutex_trylock(&m_mutex);
 	if (0 == rc)
 	{
 		return OST_TRUE;
@@ -86,8 +88,7 @@ OSTBool OSTMutex::TryLock()
 	else
 	{
 		throw SystemExc("Cannot lock mutex");
-	}
-	
+	}	
 }
 
 OSTBool OSTMutex::TryLock(long millisecondes)

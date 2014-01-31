@@ -32,47 +32,91 @@
 *----------------------------------------------------------------------------*
 *                                                                            *
 *****************************************************************************/
-#ifndef OST_CORE_OSTMEMORY_H
-#define OST_CORE_OSTMEMORY_H
-
-#include "OSTTypes.h"
+#include "OSTRWMutex.h"
 
 OST_NAMESPACE_BEGIN
-/** 
-* @class 
-* @brief 
-*/
-class OSTMemory
+
+OSTRWLock::OSTRWLock()
 {
-public:
-	static void*  OSTMalloc(const OSTSize_t nAllocSize);
+	pthread_mutexattr_t attr;
 
-	static void*  OSTMallocAligned(const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+	if( 0 != pthread_mutexattr_init(&attr) )
+		return;
 
-	static void*  OSTCalloc(const OSTSize_t nAllocNum, const OSTSize_t nAllocSize);
+	if (0 != pthread_mutex_init(&m_mutex, &attr))
+	{
+		pthread_mutexattr_destroy(&attr);
+		throw SystemExc("cannot create mutex");
+	}
+	pthread_mutexattr_destroy(&attr);
+}
 
-	static void*  OSTCallocAligned(const OSTSize_t nAllocNum, const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+OSTRWLock::~OSTRWLock()
+{
+	Unlock();
+}
 
-	static void*  OSTRealloc(void* pMemory, const OSTSize_t nAllocSize);
+void OSTRWLock::ReadLock()
+{
+	try
+	{
+		pthread_mutex_lock(&m_mutex);
+	}
+	catch (...)
+	{
+		throw SystemExc("Cannot lock mutex");
+	}
+}
 
-	static void*  OSTReallocAligned(void* pMemory, const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+OSTBool OSTRWLock::TryReadLock()
+{
+	OSTInt32 rc = pthread_mutex_trylock(&m_mutex);
+	if (0 == rc)
+	{
+		return OST_TRUE;
+	}
+	else if (rc == EBUSY)
+	{
+		return OST_FALSE;
+	}
+	else
+	{
+		throw SystemExc("Cannot lock mutex");
+	}
+}
 
-	static void*  OSTRecalloc(void* pMemory, const OSTSize_t nAllocNum, const OSTSize_t nAllocSize);
+void OSTRWLock::WriteLock()
+{
+	try
+	{
+		pthread_mutex_lock(&m_mutex);
+	}
+	catch (...)
+	{
+		throw SystemExc("Cannot lock mutex");
+	}
+}
 
-	static void  OSTFree(const void* pMemBlock);
+OSTBool OSTRWLock::TryWriteLock()
+{
+	OSTInt32 rc = pthread_mutex_trylock(&m_mutex);
+	if (0 == rc)
+	{
+		return OST_TRUE;
+	}
+	else if (rc == EBUSY)
+	{
+		return OST_FALSE;
+	}
+	else
+	{
+		throw SystemExc("Cannot lock mutex");
+	}
+}
 
-	static void  OSTFreeAligned(const void* pMemBlock);
-
-	static void  OSTMemCopy(void* pDest, const void* pSource, OSTSize_t nCount);
-
-	static OSTInt32  OSTMemCmp(const void *pBuf1, const void *pBuf2, OSTSize_t nCount);
-
-	static void  OSTMemSet(void* pDest, OSTUInt8 nValue, OSTSize_t nCount);
-
-	static void  OSTMemMove(void* pDest, const void* pSource, OSTSize_t nCount);
-};
-
-
+void OSTRWLock::Unlock()
+{
+	pthread_mutex_unlock(&m_mutex);
+}
 
 OST_NAMESPACE_END
-#endif//OST_CORE_OSTMEMORY_H

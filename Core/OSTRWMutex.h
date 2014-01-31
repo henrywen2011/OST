@@ -32,47 +32,90 @@
 *----------------------------------------------------------------------------*
 *                                                                            *
 *****************************************************************************/
-#ifndef OST_CORE_OSTMEMORY_H
-#define OST_CORE_OSTMEMORY_H
+#ifndef OST_CORE_OSTRWMUTEX_H
+#define OST_CORE_OSTRWMUTEX_H
 
 #include "OSTTypes.h"
+#include "OSTCommon.h"
+#include "OSTPlatform.h"
+#include "OSTBasicable.h"
+
+#if (OST_PLAFORM == OST_PLATFORM_WIN32)
+#	include <Windows.h>
+#else
+#	include <pthread>
+#endif
 
 OST_NAMESPACE_BEGIN
+
 /** 
-* @class 
-* @brief 
+* @class OSTRWLock
+* @brief A reader writer lock allows multiple concurrent readers or one exclusive writer.
 */
-class OSTMemory
+class OSTRWLock
 {
 public:
-	static void*  OSTMalloc(const OSTSize_t nAllocSize);
+	OSTRWLock();
+	~OSTRWLock();
 
-	static void*  OSTMallocAligned(const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+	/**
+	* @brief Acquires a read lock. If another thread currently holds a write lock
+	* waits until the write lock is released
+	*/
+	void ReadLock();
 
-	static void*  OSTCalloc(const OSTSize_t nAllocNum, const OSTSize_t nAllocSize);
+	/**
+	* @brief Tries to acquire a read lock. Immediately returns true if successful, or
+	* false if another thread currently holds a write lock.
+	*
+	* @return 
+	*	-<em>OST_TURE</em>successful
+	*	-<em>OST_FALSE</em>otherwise
+	*/
+	OSTBool TryReadLock();
 
-	static void*  OSTCallocAligned(const OSTSize_t nAllocNum, const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+	/**
+	* @brief Acquires a read lock. If one or more other threads currently hold 
+	* locks, waits until all locks are released. The results are undefined
+	* if the same thread already holds a read or write lock
+	*/
+	void WriteLock();
 
-	static void*  OSTRealloc(void* pMemory, const OSTSize_t nAllocSize);
+	/**
+	* @brief Tries to acquire a write lock. Immediately returns true if successful, or
+	* false if another thread currently holds a write lock.
+	*
+	* @return 
+	*	-<em>OST_TURE</em>successful
+	*	-<em>OST_FALSE</em>otherwise
+	*/
+	OSTBool TryWriteLock();
 
-	static void*  OSTReallocAligned(void* pMemory, const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+	/**
+	* @brief Releases the read or write lock.
+	*/	
+	void Unlock();
 
-	static void*  OSTRecalloc(void* pMemory, const OSTSize_t nAllocNum, const OSTSize_t nAllocSize);
+private:
+	OSTRWLock(const OSTRWLock&);
+	OSTRWLock& operator= (const OSTRWLock&);
 
-	static void  OSTFree(const void* pMemBlock);
+private:
 
-	static void  OSTFreeAligned(const void* pMemBlock);
-
-	static void  OSTMemCopy(void* pDest, const void* pSource, OSTSize_t nCount);
-
-	static OSTInt32  OSTMemCmp(const void *pBuf1, const void *pBuf2, OSTSize_t nCount);
-
-	static void  OSTMemSet(void* pDest, OSTUInt8 nValue, OSTSize_t nCount);
-
-	static void  OSTMemMove(void* pDest, const void* pSource, OSTSize_t nCount);
+#if (OST_PLAFORM == OST_PLATFORM_WIN32)
+	HANDLE   m_mutex;
+	HANDLE   m_readEvent;
+	HANDLE   m_writeEvent;
+	unsigned m_readers;
+	unsigned m_writersWaiting;
+	unsigned m_writers;
+#elif (OST_PLAFORM == OST_PLATFORM_ANDROID)
+	pthread_mutex_t m_mutex;
+#else
+	pthread_rwlock_t m_rwl;
+#endif
 };
 
-
-
 OST_NAMESPACE_END
-#endif//OST_CORE_OSTMEMORY_H
+
+#endif//OST_CORE_OSTRWMUTEX_H

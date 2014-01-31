@@ -84,33 +84,4 @@ void OSTMemory::OSTMemMove(void* pDest, const void* pSource, OSTSize_t nCount)
 	memmove(pDest, pSource, nCount);
 }
 
-OSTUInt64 OSTMemory::OSTEndianSwapUINT64(OSTUInt64 nValue)
-{
-	return ((nValue >> 56) ) | ((nValue >> 40) & 0x000000000000ff00ULL) |
-		((nValue >> 24) & 0x0000000000ff0000ULL) | ((nValue >> 8 ) & 0x00000000ff000000ULL) |
-		((nValue << 8 ) & 0x000000ff00000000ULL) | ((nValue << 24) & 0x0000ff0000000000ULL) |
-		((nValue << 40) & 0x00ff000000000000ULL) | ((nValue << 56) );
-}
-
-OSTUInt32 OSTMemory::OSTEndianSwapUINT32(OSTUInt32 nValue)
-{
-	return  (nValue>>24) | 
-		((nValue<<8) & 0x00FF0000) |
-		((nValue>>8) & 0x0000FF00) |
-		(nValue<<24);
-}
-
-OSTUInt16 OSTMemory::OSTEndianSwapUINT16(OSTUInt16 nValue)
-{
-	return ((nValue>>8) | (nValue<<8));
-}
-
-OSTFloat OSTMemory::OSTEndianSwapFLOAT(OSTFloat fValue)
-{
-	OSTUInt32* pnValue = (OSTUInt32*)&fValue;
-	OSTUInt32 nValue = OSTEndianSwapUINT32(*pnValue);
-	OSTFloat* pfValue = (OSTFloat*)&nValue;
-	return *pfValue;
-}
-
 OST_NAMESPACE_END

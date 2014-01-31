@@ -32,47 +32,48 @@
 *----------------------------------------------------------------------------*
 *                                                                            *
 *****************************************************************************/
-#ifndef OST_CORE_OSTMEMORY_H
-#define OST_CORE_OSTMEMORY_H
-
-#include "OSTTypes.h"
+#include "OSTByteConvert.h"
 
 OST_NAMESPACE_BEGIN
-/** 
-* @class 
-* @brief 
-*/
-class OSTMemory
+
+OSTInt16 OSTByteConvert::FlipBytes( OSTInt16 bytes )
 {
-public:
-	static void*  OSTMalloc(const OSTSize_t nAllocSize);
+	return OSTInt16(FlipBytes(OSTUInt16(bytes)));
+}
 
-	static void*  OSTMallocAligned(const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+OSTUInt16 OSTByteConvert::FlipBytes( OSTUInt16 bytes )
+{
+	return ((bytes>>8) | (bytes<<8));
+}
 
-	static void*  OSTCalloc(const OSTSize_t nAllocNum, const OSTSize_t nAllocSize);
+OSTInt32 OSTByteConvert::FlipBytes( OSTInt32 bytes )
+{
+	return OSTInt32(FlipBytes(OSTUInt32(bytes)));
+}
 
-	static void*  OSTCallocAligned(const OSTSize_t nAllocNum, const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+OSTUInt32 OSTByteConvert::FlipBytes( OSTUInt32 bytes )
+{
+	return  (bytes>>24) | ((bytes<<8) & 0x00FF0000) 
+		| ((bytes>>8) & 0x0000FF00) | (bytes<<24);
+}
 
-	static void*  OSTRealloc(void* pMemory, const OSTSize_t nAllocSize);
+OSTInt64 OSTByteConvert::FlipBytes( OSTInt64 bytes )
+{
+	return OSTInt64(FlipBytes(OSTUInt64(bytes)));
+}
 
-	static void*  OSTReallocAligned(void* pMemory, const OSTSize_t nAllocSize, const OSTSize_t nAlignment);
+OSTUInt64 OSTByteConvert::FlipBytes( OSTUInt64 bytes )
+{
+	/*OSTUInt32 hi = OSTUInt32(bytes >> 32);
+	OSTUInt32 lo = OSTUInt32(bytes & 0xFFFFFFFF);
 
-	static void*  OSTRecalloc(void* pMemory, const OSTSize_t nAllocNum, const OSTSize_t nAllocSize);
+	return OSTUInt64(FlipBytes(hi)) | (OSTUInt64(FlipBytes(lo)) << 32);*/
 
-	static void  OSTFree(const void* pMemBlock);
-
-	static void  OSTFreeAligned(const void* pMemBlock);
-
-	static void  OSTMemCopy(void* pDest, const void* pSource, OSTSize_t nCount);
-
-	static OSTInt32  OSTMemCmp(const void *pBuf1, const void *pBuf2, OSTSize_t nCount);
-
-	static void  OSTMemSet(void* pDest, OSTUInt8 nValue, OSTSize_t nCount);
-
-	static void  OSTMemMove(void* pDest, const void* pSource, OSTSize_t nCount);
-};
-
+	return ((bytes >> 56) ) | ((bytes >> 40) & 0x000000000000ff00ULL) |
+		((bytes >> 24) & 0x0000000000ff0000ULL) | ((bytes >> 8 ) & 0x00000000ff000000ULL) |
+		((bytes << 8 ) & 0x000000ff00000000ULL) | ((bytes << 24) & 0x0000ff0000000000ULL) |
+		((bytes << 40) & 0x00ff000000000000ULL) | ((bytes << 56) );
+}
 
 
 OST_NAMESPACE_END
-#endif//OST_CORE_OSTMEMORY_H
