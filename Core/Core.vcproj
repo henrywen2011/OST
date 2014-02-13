@@ -331,15 +331,28 @@
 				<File
 					RelativePath=".\OSTRWLock_Win32.cpp"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="math"
+			>
+			<File
+				RelativePath=".\complex.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\complex.h"
+				>
+			</File>
+			<File
+				RelativePath=".\fft.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\fft.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\main.cpp"
